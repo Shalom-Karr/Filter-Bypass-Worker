@@ -70,26 +70,20 @@ https://filter-bypass-worker.<your-account>.workers.dev
    cd Filter-Bypass-Worker
    ```
 
-2. **Install Wrangler** (Cloudflare's CLI tool for Workers)
+2. **Log in to Cloudflare**
 
    ```bash
-   npm install -g wrangler
-   ```
-
-   > You can also use `npx wrangler` instead of installing globally.
-
-3. **Log in to Cloudflare**
-
-   ```bash
-   wrangler login
+   npx wrangler login
    ```
 
    This opens a browser window. Authorize Wrangler and return to the terminal.
 
-4. **Deploy**
+   > `npx wrangler` runs Wrangler without a global install. If you prefer, you can install it globally first with `npm install -g wrangler` and then run the commands without the `npx` prefix.
+
+3. **Deploy**
 
    ```bash
-   wrangler deploy
+   npx wrangler deploy
    ```
 
    Wrangler reads the included `wrangler.toml` configuration file and uploads `worker.js` to Cloudflare. On success you will see output like:
@@ -99,16 +93,18 @@ https://filter-bypass-worker.<your-account>.workers.dev
      https://filter-bypass-worker.<your-account>.workers.dev
    ```
 
-5. **Verify** – open the printed URL in your browser. You should see the text **"Proxy Active"**.
+   > **Note:** Use `wrangler deploy`, **not** `wrangler versions upload`. The `versions upload` command uploads code without activating it (intended for gradual rollouts). `wrangler deploy` uploads **and** activates in one step, which is what you want here.
+
+4. **Verify** – open the printed URL in your browser. You should see the text **"Proxy Active"**.
 
 #### Useful Wrangler commands
 
 | Command | Description |
 |---|---|
-| `wrangler deploy` | Deploy (or re-deploy) the worker |
-| `wrangler dev` | Start a local development server at `http://localhost:8787` |
-| `wrangler tail` | Stream live logs from the deployed worker |
-| `wrangler delete` | Remove the worker from Cloudflare |
+| `npx wrangler deploy` | Deploy (or re-deploy) the worker |
+| `npx wrangler dev` | Start a local development server at `http://localhost:8787` |
+| `npx wrangler tail` | Stream live logs from the deployed worker |
+| `npx wrangler delete` | Remove the worker from Cloudflare |
 
 ---
 
