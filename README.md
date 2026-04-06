@@ -2,6 +2,8 @@
 
 A Cloudflare Worker that acts as a reverse proxy, primarily designed to bypass network filters and access restrictions for YouTube and other Google services.
 
+> **Disclaimer:** This project is provided for educational and research purposes only. Users are responsible for ensuring their use complies with all applicable laws, regulations, and terms of service. Do not use this tool to circumvent security policies or controls without proper authorization.
+
 ## How It Works
 
 The worker intercepts HTTP requests and forwards them to the target URL, rewriting headers and response content so that resources load correctly through the proxy.
@@ -51,7 +53,7 @@ If no `url` parameter is provided and the path is `/`, the worker returns a simp
    ```toml
    name = "filter-bypass-worker"
    main = "worker.js"
-   compatibility_date = "2024-01-01"
+   compatibility_date = "2026-04-01"
    ```
 
 4. **Deploy**
