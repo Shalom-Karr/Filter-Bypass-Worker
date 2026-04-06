@@ -26,35 +26,65 @@ https://<your-worker>.workers.dev/?url=https://www.youtube.com
 
 If no `url` parameter is provided and the path is `/`, the worker returns a simple `Proxy Active` health-check response.
 
-## Deployment
+## Deploying to a Cloudflare Worker
 
-### Prerequisites
+There are two ways to deploy: through the **Cloudflare Dashboard** (no tools required) or with the **Wrangler CLI** (recommended for ongoing development). Both are free on the Cloudflare Workers free tier (100 000 requests/day).
 
-- A [Cloudflare](https://cloudflare.com) account
-- [Node.js](https://nodejs.org) (v16+)
-- [Wrangler CLI](https://developers.cloudflare.com/workers/wrangler/install-and-update/)
+---
 
-### Steps
+### Option A – Cloudflare Dashboard (quickest, no CLI needed)
 
-1. **Install Wrangler**
+1. Sign up or log in at [dash.cloudflare.com](https://dash.cloudflare.com).
+2. In the left sidebar, go to **Workers & Pages**.
+3. Click **Create** → **Create Worker**.
+4. Give the worker a name (e.g. `filter-bypass-worker`) and click **Deploy** to create the default "Hello World" worker.
+5. Click **Edit Code** to open the online editor.
+6. **Delete** all of the placeholder code and **paste** the entire contents of [`worker.js`](worker.js) from this repository.
+7. Click **Deploy** (top-right).
+
+Your worker is now live at:
+
+```
+https://filter-bypass-worker.<your-account>.workers.dev
+```
+
+> **Tip:** You can find your `*.workers.dev` subdomain under **Workers & Pages → Overview** in the dashboard.
+
+---
+
+### Option B – Wrangler CLI (recommended)
+
+#### Prerequisites
+
+| Requirement | Why |
+|---|---|
+| [Node.js](https://nodejs.org) v16 or later | Wrangler runs on Node |
+| A free [Cloudflare account](https://dash.cloudflare.com/sign-up) | Hosts the worker |
+
+#### Step-by-step
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/Shalom-Karr/Filter-Bypass-Worker.git
+   cd Filter-Bypass-Worker
+   ```
+
+2. **Install Wrangler** (Cloudflare's CLI tool for Workers)
 
    ```bash
    npm install -g wrangler
    ```
 
-2. **Authenticate**
+   > You can also use `npx wrangler` instead of installing globally.
+
+3. **Log in to Cloudflare**
 
    ```bash
    wrangler login
    ```
 
-3. **Create a `wrangler.toml`** (if one doesn't already exist)
-
-   ```toml
-   name = "filter-bypass-worker"
-   main = "worker.js"
-   compatibility_date = "2026-04-01"
-   ```
+   This opens a browser window. Authorize Wrangler and return to the terminal.
 
 4. **Deploy**
 
@@ -62,13 +92,44 @@ If no `url` parameter is provided and the path is `/`, the worker returns a simp
    wrangler deploy
    ```
 
-The worker will be available at `https://filter-bypass-worker.<your-subdomain>.workers.dev`.
+   Wrangler reads the included `wrangler.toml` configuration file and uploads `worker.js` to Cloudflare. On success you will see output like:
+
+   ```
+   Published filter-bypass-worker (0.50 sec)
+     https://filter-bypass-worker.<your-account>.workers.dev
+   ```
+
+5. **Verify** – open the printed URL in your browser. You should see the text **"Proxy Active"**.
+
+#### Useful Wrangler commands
+
+| Command | Description |
+|---|---|
+| `wrangler deploy` | Deploy (or re-deploy) the worker |
+| `wrangler dev` | Start a local development server at `http://localhost:8787` |
+| `wrangler tail` | Stream live logs from the deployed worker |
+| `wrangler delete` | Remove the worker from Cloudflare |
+
+---
+
+### Configuration
+
+The `wrangler.toml` included in this repo contains the minimal configuration needed:
+
+```toml
+name = "filter-bypass-worker"   # Worker name (becomes part of the URL)
+main = "worker.js"              # Entry point
+compatibility_date = "2026-04-01"
+```
+
+You can change the `name` field to give the worker a different URL, or add a [custom domain](https://developers.cloudflare.com/workers/configuration/routing/custom-domains/) in the Cloudflare dashboard.
 
 ## Project Structure
 
 ```
 .
-└── worker.js   # Cloudflare Worker entry point
+├── worker.js      # Cloudflare Worker entry point
+└── wrangler.toml  # Wrangler deployment configuration
 ```
 
 ## License
